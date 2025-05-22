@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEngine.InputSystem;
 
 public class VotingManager : MonoBehaviour
 {
     [SerializeField] private int _numberOfPlayers;
+    [SerializeField] private TMP_InputField _playerInputField;
+    [SerializeField] private GameObject _startCanvas;
     [SerializeField] private GameObject _votingCanvas;
     [SerializeField] private GameObject _resultCanvas;
     [SerializeField] private TextMeshProUGUI _votingText;
@@ -15,7 +15,8 @@ public class VotingManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _resultText;
     [SerializeField] private Image _yesBar;
     [SerializeField] private Image _noBar;
-    private string[] directions = new string[4] { "a DIREITA", "a ESQUERDA", "CIMA", "BAIXO" };
+    private string[] _directions = new string[4] { "a DIREITA", "a ESQUERDA", "CIMA", "BAIXO" };
+    private string _lastDirection;
     private bool[] _votes;
     private int _votesCast;
     [SerializeField] private float _voteWaitTime;
@@ -24,24 +25,37 @@ public class VotingManager : MonoBehaviour
     private void Start()
     {
         _wfs = new WaitForSeconds(_voteWaitTime);
-
-        StartVote();
     }
 
-    private void StartVote()
+    public void StartVote()
     {
-        _votes = new bool[_numberOfPlayers];
-        _votesCast = 0;
+        if (int.TryParse(_playerInputField.text, out int np)) _numberOfPlayers = np;
+        else return;
+
+        _startCanvas.SetActive(false);
 
         StartCoroutine(RegisterVotes());
     }
-    private IEnumerator RegisterVotes()
+    private string ChooseRandomDirection()
     {
         int rnd = Random.Range(0, 3);
-        string dir = directions[rnd];
+        string dir = _directions[rnd];
+
+        if (_lastDirection == dir) dir = ChooseRandomDirection();
+
+        _lastDirection = dir;
+
+        return dir;
+    }
+    private IEnumerator RegisterVotes()
+    {
+        string dir = ChooseRandomDirection();
 
         _directionText.text = $"Querem Andar Para {dir} ?";
         _votingCanvas.SetActive(true);
+
+        _votes = new bool[_numberOfPlayers];
+        _votesCast = 0;
 
         while (_votesCast < _numberOfPlayers)
         {
@@ -101,7 +115,7 @@ public class VotingManager : MonoBehaviour
 
         _resultCanvas.SetActive(false);
 
-        StartVote();
+        StartCoroutine(RegisterVotes());
     }
 
 }
