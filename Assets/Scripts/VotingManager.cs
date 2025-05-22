@@ -11,9 +11,11 @@ public class VotingManager : MonoBehaviour
     [SerializeField] private GameObject _votingCanvas;
     [SerializeField] private GameObject _resultCanvas;
     [SerializeField] private TextMeshProUGUI _votingText;
+    [SerializeField] private TextMeshProUGUI _directionText;
     [SerializeField] private TextMeshProUGUI _resultText;
     [SerializeField] private Image _yesBar;
     [SerializeField] private Image _noBar;
+    private string[] directions = new string[4] { "a DIREITA", "a ESQUERDA", "CIMA", "BAIXO" };
     private bool[] _votes;
     private int _votesCast;
     [SerializeField] private float _voteWaitTime;
@@ -35,6 +37,10 @@ public class VotingManager : MonoBehaviour
     }
     private IEnumerator RegisterVotes()
     {
+        int rnd = Random.Range(0, 3);
+        string dir = directions[rnd];
+
+        _directionText.text = $"Querem Andar Para {dir} ?";
         _votingCanvas.SetActive(true);
 
         while (_votesCast < _numberOfPlayers)
