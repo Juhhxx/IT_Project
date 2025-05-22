@@ -51,8 +51,8 @@ public class VotingManager : MonoBehaviour
 
             while (vote == null)
             {
-                if (Input.GetKeyDown(KeyCode.Y)) vote = true;
-                if (Input.GetKeyDown(KeyCode.N)) vote = false;
+                if ( Buttons.InputYes() ) vote = true;
+                if ( Buttons.InputNo() ) vote = false;
 
                 yield return null;
             }
