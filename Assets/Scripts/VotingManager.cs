@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+using System.Collections.Generic;
 
 public class VotingManager : MonoBehaviour
 {
@@ -96,9 +97,13 @@ public class VotingManager : MonoBehaviour
         float yes = 0;
         float no = 0;
 
+        List<bool> votesShuffled = new List<bool>(_votes);
+
+        votesShuffled.Shuffle();
+
         while (i < _numberOfPlayers)
         {
-            if (_votes[i]) yes++;
+            if (votesShuffled[i]) yes++;
             else no++;
 
             _yesBar.fillAmount = yes / _numberOfPlayers;
@@ -109,11 +114,11 @@ public class VotingManager : MonoBehaviour
             yield return _wfs;
         }
 
-        string result = yes > no ? "SIM" : "NÃO";
+        string result = yes > no ? "SIM" : "NAO";
 
-        if (yes == no) result = "NÃO";
+        if (yes == no) result = "NAO";
 
-        _resultText.text = $"O Resultado é : {result}";
+        _resultText.text = $"O Resultado e : {result}";
 
         yield return new WaitForKeyDown(KeyCode.Return);
 
