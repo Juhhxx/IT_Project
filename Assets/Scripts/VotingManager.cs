@@ -109,6 +109,8 @@ public class VotingManager : MonoBehaviour
 
         string result = yes > no ? "SIM" : "NÃO";
 
+        if (yes == no) result = "NÃO";
+
         _resultText.text = $"O Resultado é : {result}";
 
         yield return new WaitForKeyDown(KeyCode.Return);
