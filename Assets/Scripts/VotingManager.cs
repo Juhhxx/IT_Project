@@ -32,6 +32,8 @@ public class VotingManager : MonoBehaviour
         if (int.TryParse(_playerInputField.text, out int np)) _numberOfPlayers = np;
         else return;
 
+        if (_numberOfPlayers <= 2) return;
+
         _startCanvas.SetActive(false);
 
         StartCoroutine(RegisterVotes());
